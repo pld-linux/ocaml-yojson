@@ -1,11 +1,11 @@
 #
 # Conditional build:
-%bcond_with	opt		# build opt
+%bcond_without	opt		# build opt
 
-%define		pkgname	yojson
+%define		module	yojson
 %define		debug_package	%{nil}
 Summary:	JSON library for OCaml
-Name:		ocaml-%{pkgname}
+Name:		ocaml-%{module}
 Version:	1.1.7
 Release:	1
 License:	BSD
@@ -48,7 +48,7 @@ Pakiet ten zawiera pliki niezbędne do tworzenia programów używających
 tej biblioteki.
 
 %prep
-%setup -q -n %{pkgname}-%{version}
+%setup -q -n %{module}-%{version}
 
 %build
 %{__make} -j1 all %{?with_opt:opt} \
@@ -56,18 +56,17 @@ tej biblioteki.
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}/ocaml}
+%{__make} install \
+	OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml \
+	PREFIX=$RPM_BUILD_ROOT%{_prefix} \
+	DESTDIR=$RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT%{_libdir}/ocaml/{%{module},stublibs}
-cp -p *.cm[ixa]* $RPM_BUILD_ROOT%{_libdir}/ocaml/%{module}
-
+# move to dir pld ocamlfind looks
 install -d $RPM_BUILD_ROOT%{_libdir}/ocaml/site-lib/%{module}
-cat > $RPM_BUILD_ROOT%{_libdir}/ocaml/site-lib/%{module}/META <<EOF
-requires = ""
-version = "%{version}"
-directory = "+%{module}"
-archive(byte) = "%{module}.cma"
-archive(native) = "%{module}.cmxa"
-linkopts = ""
+mv $RPM_BUILD_ROOT%{_libdir}/ocaml/{,site-lib/}%{module}/META
+cat <<EOF >> $RPM_BUILD_ROOT%{_libdir}/ocaml/site-lib/%{module}/META
+directory="+%{module}"
 EOF
 
 %clean
@@ -75,7 +74,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%doc LICENSE *.mli
+%doc LICENSE
 %dir %{_libdir}/ocaml/%{module}
-%{_libdir}/ocaml/%{module}/*.cm[ixa]*
+%{_libdir}/ocaml/%{module}/*.cm[ix]
+%{_libdir}/ocaml/%{module}/*.cm[ao]
+%{_libdir}/ocaml/%{module}/*.mli
+%if %{with opt}
+%attr(755,root,root) %{_bindir}/ydump
+%{_libdir}/ocaml/%{module}/*.[ao]
+#%{_libdir}/ocaml/%{module}/*.cmxa
+%endif
 %{_libdir}/ocaml/site-lib/%{module}
