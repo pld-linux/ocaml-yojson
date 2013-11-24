@@ -57,16 +57,16 @@ tej biblioteki.
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT%{_libdir}/ocaml/{yojson,stublibs}
-cp -p *.cm[ixa]* $RPM_BUILD_ROOT%{_libdir}/ocaml/yojson
+install -d $RPM_BUILD_ROOT%{_libdir}/ocaml/{%{module},stublibs}
+cp -p *.cm[ixa]* $RPM_BUILD_ROOT%{_libdir}/ocaml/%{module}
 
-install -d $RPM_BUILD_ROOT%{_libdir}/ocaml/site-lib/yojson
-cat > $RPM_BUILD_ROOT%{_libdir}/ocaml/site-lib/yojson/META <<EOF
+install -d $RPM_BUILD_ROOT%{_libdir}/ocaml/site-lib/%{module}
+cat > $RPM_BUILD_ROOT%{_libdir}/ocaml/site-lib/%{module}/META <<EOF
 requires = ""
 version = "%{version}"
-directory = "+yojson"
-archive(byte) = "yojson.cma"
-archive(native) = "yojson.cmxa"
+directory = "+%{module}"
+archive(byte) = "%{module}.cma"
+archive(native) = "%{module}.cmxa"
 linkopts = ""
 EOF
 
@@ -76,6 +76,6 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %doc LICENSE *.mli
-%dir %{_libdir}/ocaml/yojson
-%{_libdir}/ocaml/yojson/*.cm[ixa]*
-%{_libdir}/ocaml/site-lib/yojson
+%dir %{_libdir}/ocaml/%{module}
+%{_libdir}/ocaml/%{module}/*.cm[ixa]*
+%{_libdir}/ocaml/site-lib/%{module}
