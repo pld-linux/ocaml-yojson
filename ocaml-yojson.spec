@@ -6,12 +6,12 @@
 %define		debug_package	%{nil}
 Summary:	JSON library for OCaml
 Name:		ocaml-%{module}
-Version:	1.1.7
+Version:	1.1.8
 Release:	1
 License:	BSD
 Group:		Libraries
 Source0:	http://mjambon.com/releases/yojson/yojson-%{version}.tar.gz
-# Source0-md5:	7017f2009a33d08c25ab0478598c9023
+# Source0-md5:	e3c53004f74410c3835d851b02c1bf21
 URL:		http://mjambon.com/yojson.html
 BuildRequires:	cppo >= 0.9.3
 BuildRequires:	ocaml >= 3.04-7
