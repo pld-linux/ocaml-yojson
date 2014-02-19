@@ -7,7 +7,7 @@
 Summary:	JSON library for OCaml
 Name:		ocaml-%{module}
 Version:	1.1.8
-Release:	1
+Release:	2
 License:	BSD
 Group:		Libraries
 Source0:	http://mjambon.com/releases/yojson/yojson-%{version}.tar.gz
@@ -19,6 +19,8 @@ BuildRequires:	ocaml-biniou-devel >= 1.0.6
 BuildRequires:	ocaml-easy-format-devel >= 1.0.1
 BuildRequires:	ocaml-findlib >= 1.4
 %requires_eq	ocaml-runtime
+Requires:	ocaml-biniou >= 1.0.6
+Requires:	ocaml-easy-format >= 1.0.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -39,6 +41,8 @@ Summary(pl.UTF-8):	Wiązania yojson dla OCamla - cześć programistyczna
 Group:		Development/Libraries
 %requires_eq	ocaml
 Requires:	%{name} = %{version}-%{release}
+Requires:	ocaml-biniou-devel >= 1.0.6
+Requires:	ocaml-easy-format-devel >= 1.0.1
 
 %description devel
 This package contains files needed to develop OCaml programs using
