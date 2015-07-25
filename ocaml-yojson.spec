@@ -1,13 +1,18 @@
 #
 # Conditional build:
-%bcond_without	opt		# build opt
+%bcond_without	ocaml_opt	# skip building native optimized binaries (bytecode is always built)
+
+# not yet available on x32 (ocaml 4.02.1), remove when upstream will support it
+%ifnarch %{ix86} %{x8664} arm aarch64 ppc sparc sparcv9
+%undefine	with_ocaml_opt
+%endif
 
 %define		module	yojson
 %define		debug_package	%{nil}
 Summary:	JSON library for OCaml
 Name:		ocaml-%{module}
 Version:	1.1.8
-Release:	3
+Release:	4
 License:	BSD
 Group:		Libraries
 Source0:	http://mjambon.com/releases/yojson/yojson-%{version}.tar.gz
@@ -56,7 +61,7 @@ tej biblioteki.
 %setup -q -n %{module}-%{version}
 
 %build
-%{__make} -j1 all %{?with_opt:opt} \
+%{__make} -j1 all %{?with_ocaml_opt:opt} \
 	CC="%{__cc} %{rpmcflags} -fPIC"
 
 %install
@@ -80,7 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %dir %{_libdir}/ocaml/%{module}
+%if %{with ocaml_opt}
 %{_libdir}/ocaml/%{module}/*.cmxs
+%endif
 %{_libdir}/ocaml/site-lib/%{module}
 
 %files devel
@@ -89,7 +96,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/ocaml/%{module}/*.cm[ix]
 %{_libdir}/ocaml/%{module}/*.cm[ao]
 %{_libdir}/ocaml/%{module}/*.mli
-%if %{with opt}
+%if %{with ocaml_opt}
 %attr(755,root,root) %{_bindir}/ydump
 %{_libdir}/ocaml/%{module}/*.[ao]
 #%{_libdir}/ocaml/%{module}/*.cmxa
