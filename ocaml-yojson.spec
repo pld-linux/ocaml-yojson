@@ -12,7 +12,7 @@
 Summary:	JSON library for OCaml
 Name:		ocaml-%{module}
 Version:	1.1.8
-Release:	4
+Release:	5
 License:	BSD
 Group:		Libraries
 Source0:	http://mjambon.com/releases/yojson/yojson-%{version}.tar.gz
