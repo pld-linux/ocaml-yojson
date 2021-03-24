@@ -11,18 +11,20 @@
 %define		debug_package	%{nil}
 Summary:	JSON library for OCaml
 Name:		ocaml-%{module}
-Version:	1.1.8
-Release:	7
+Version:	1.7.0
+Release:	1
 License:	BSD
 Group:		Libraries
-Source0:	http://mjambon.com/releases/yojson/yojson-%{version}.tar.gz
-# Source0-md5:	e3c53004f74410c3835d851b02c1bf21
-URL:		http://mjambon.com/yojson.html
+Source0:	https://github.com/ocaml-community/yojson/releases/download/%{version}/%{module}-%{version}.tbz
+# Source0-md5:	b89d39ca3f8c532abe5f547ad3b8f84d
+URL:		https://github.com/ocaml-community/yojson
 BuildRequires:	cppo >= 1.5.0
 BuildRequires:	ocaml >= 3.04-7
 BuildRequires:	ocaml-biniou-devel >= 1.0.6
+BuildRequires:	ocaml-dune
 BuildRequires:	ocaml-easy-format-devel >= 1.0.1
 BuildRequires:	ocaml-findlib >= 1.4
+BuildRequires:	ocamlbuild-cppo >= 1.6.1
 %requires_eq	ocaml-runtime
 Requires:	ocaml-biniou >= 1.0.6
 Requires:	ocaml-easy-format >= 1.0.1
@@ -44,7 +46,7 @@ używających tej biblioteki.
 Summary:	yojson binding for OCaml - development part
 Summary(pl.UTF-8):	Wiązania yojson dla OCamla - cześć programistyczna
 Group:		Development/Libraries
-%requires_eq	ocaml
+%requires_eq ocaml
 Requires:	%{name} = %{version}-%{release}
 Requires:	ocaml-biniou-devel >= 1.0.6
 Requires:	ocaml-easy-format-devel >= 1.0.1
@@ -61,8 +63,7 @@ tej biblioteki.
 %setup -q -n %{module}-%{version}
 
 %build
-%{__make} -j1 all %{?with_ocaml_opt:opt} \
-	CC="%{__cc} %{rpmcflags} -fPIC"
+dune build
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -84,7 +85,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
+%doc README.md
 %dir %{_libdir}/ocaml/%{module}
+%{_libdir}/ocaml/yojson/dune-package
+%{_libdir}/ocaml/yojson/opam
 %if %{with ocaml_opt}
 %{_libdir}/ocaml/%{module}/*.cmxs
 %endif
@@ -92,12 +96,16 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%doc LICENSE
+%doc LICENSE.md
 %{_libdir}/ocaml/%{module}/*.cm[ix]
 %{_libdir}/ocaml/%{module}/*.cm[ao]
 %{_libdir}/ocaml/%{module}/*.mli
 %if %{with ocaml_opt}
 %attr(755,root,root) %{_bindir}/ydump
 %{_libdir}/ocaml/%{module}/*.[ao]
-#%{_libdir}/ocaml/%{module}/*.cmxa
+%{_libdir}/ocaml/%{module}/*.cmxa
 %endif
+%{_libdir}/ocaml/yojson/yojson.cmt
+%{_libdir}/ocaml/yojson/yojson.cmti
+%{_libdir}/ocaml/yojson/yojson_biniou.cmt
+%{_libdir}/ocaml/yojson/yojson_biniou.cmti
