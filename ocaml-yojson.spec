@@ -16,6 +16,7 @@ Version:	1.7.0
 Release:	4
 License:	BSD
 Group:		Libraries
+#Source0Download: https://github.com/ocaml-community/yojson/releases
 Source0:	https://github.com/ocaml-community/yojson/releases/download/%{version}/%{module}-%{version}.tbz
 # Source0-md5:	b89d39ca3f8c532abe5f547ad3b8f84d
 URL:		https://github.com/ocaml-community/yojson
