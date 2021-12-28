@@ -1,9 +1,9 @@
 #
 # Conditional build:
-%bcond_without	ocaml_opt	# skip building native optimized binaries (bytecode is always built)
+%bcond_without	ocaml_opt	# native optimized binaries (bytecode is always built)
 
-# not yet available on x32 (ocaml 4.02.1), remove when upstream will support it
-%ifnarch %{ix86} %{x8664} arm aarch64 ppc sparc sparcv9
+# not yet available on x32 (ocaml 4.02.1), update when upstream will support it
+%ifnarch %{ix86} %{x8664} %{arm} aarch64 ppc sparc sparcv9
 %undefine	with_ocaml_opt
 %endif
 
@@ -20,14 +20,13 @@ Source0:	https://github.com/ocaml-community/yojson/releases/download/%{version}/
 # Source0-md5:	b89d39ca3f8c532abe5f547ad3b8f84d
 URL:		https://github.com/ocaml-community/yojson
 BuildRequires:	cppo >= 1.5.0
-BuildRequires:	ocaml >= 3.04-7
-BuildRequires:	ocaml-biniou-devel >= 1.0.6
+BuildRequires:	ocaml >= 1:4.02.3
+BuildRequires:	ocaml-biniou-devel >= 1.2.0
 BuildRequires:	ocaml-dune
 BuildRequires:	ocaml-easy-format-devel >= 1.0.1
 BuildRequires:	ocaml-findlib >= 1.4
-BuildRequires:	ocamlbuild-cppo >= 1.6.1
 %requires_eq	ocaml-runtime
-Requires:	ocaml-biniou >= 1.0.6
+Requires:	ocaml-biniou >= 1.2.0
 Requires:	ocaml-easy-format >= 1.0.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -49,7 +48,7 @@ Summary(pl.UTF-8):	Biblioteka JSON dla OCamla - cześć programistyczna
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 %requires_eq	ocaml
-Requires:	ocaml-biniou-devel >= 1.0.6
+Requires:	ocaml-biniou-devel >= 1.2.0
 Requires:	ocaml-easy-format-devel >= 1.0.1
 
 %description devel
@@ -64,42 +63,42 @@ używających biblioteki yojson.
 %setup -q -n %{module}-%{version}
 
 %build
-dune build
+dune build --verbose
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}/ocaml}
-%{__make} install \
-	OCAMLFIND_DESTDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml \
-	PREFIX=$RPM_BUILD_ROOT%{_prefix} \
-	DESTDIR=$RPM_BUILD_ROOT
+
+dune install --destdir=$RPM_BUILD_ROOT
+
+# sources
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/ocaml/%{module}/*.ml
+# packaged as %doc
+%{__rm} -r $RPM_BUILD_ROOT%{_prefix}/doc/%{module}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc README.md
-%dir %{_libdir}/ocaml/%{module}
+%doc LICENSE.md README.md
+%dir %{_libdir}/ocaml/yojson
 %{_libdir}/ocaml/yojson/META
-%{_libdir}/ocaml/yojson/dune-package
-%{_libdir}/ocaml/yojson/opam
+%{_libdir}/ocaml/yojson/*.cma
 %if %{with ocaml_opt}
-%{_libdir}/ocaml/%{module}/*.cmxs
+%attr(755,root,root) %{_bindir}/ydump
+%attr(755,root,root) %{_libdir}/ocaml/yojson/*.cmxs
 %endif
 
 %files devel
 %defattr(644,root,root,755)
-%doc LICENSE.md
-%{_libdir}/ocaml/%{module}/*.cm[ix]
-%{_libdir}/ocaml/%{module}/*.cm[ao]
-%{_libdir}/ocaml/%{module}/*.mli
+%{_libdir}/ocaml/yojson/*.cmi
+%{_libdir}/ocaml/yojson/*.cmt
+%{_libdir}/ocaml/yojson/*.cmti
+%{_libdir}/ocaml/yojson/*.mli
 %if %{with ocaml_opt}
-%attr(755,root,root) %{_bindir}/ydump
-%{_libdir}/ocaml/%{module}/*.[ao]
-%{_libdir}/ocaml/%{module}/*.cmxa
+%{_libdir}/ocaml/yojson/*.a
+%{_libdir}/ocaml/yojson/*.cmx
+%{_libdir}/ocaml/yojson/*.cmxa
 %endif
-%{_libdir}/ocaml/yojson/yojson.cmt
-%{_libdir}/ocaml/yojson/yojson.cmti
-%{_libdir}/ocaml/yojson/yojson_biniou.cmt
-%{_libdir}/ocaml/yojson/yojson_biniou.cmti
+%{_libdir}/ocaml/yojson/dune-package
+%{_libdir}/ocaml/yojson/opam
