@@ -10,6 +10,7 @@
 %define		module	yojson
 %define		debug_package	%{nil}
 Summary:	JSON library for OCaml
+Summary(pl.UTF-8):	Biblioteka JSON dla OCamla
 Name:		ocaml-%{module}
 Version:	1.7.0
 Release:	4
@@ -34,20 +35,20 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Yojson is an optimized parsing and printing library for the JSON
 format. It addresses a few shortcomings of json-wheel including 3x
 speed improvement, polymorphic variants and optional syntax for tuples
-and variants. . It is a replacement for json-wheel
-(libjson-wheel-ocaml-dev). . This package contain the development
-files needed for programming with the library.
+and variants.
 
 %description -l pl.UTF-8
-Pakiet ten zawiera binaria potrzebne do uruchamiania programów
-używających tej biblioteki.
+Yojson to zoptymalizowana biblioteka do analizy i wypisywania formatu
+JSON. Wychodzi naprzeciw kilku ograniczeniom biblioteki json-wheel,
+m.in. daje trzykrotne przyspieszenie, warianty polimorficzne i
+składnię opcjonalną dla krotek i wariantów.
 
 %package devel
-Summary:	yojson binding for OCaml - development part
-Summary(pl.UTF-8):	Wiązania yojson dla OCamla - cześć programistyczna
+Summary:	JSON library for OCaml - development part
+Summary(pl.UTF-8):	Biblioteka JSON dla OCamla - cześć programistyczna
 Group:		Development/Libraries
-%requires_eq ocaml
 Requires:	%{name} = %{version}-%{release}
+%requires_eq	ocaml
 Requires:	ocaml-biniou-devel >= 1.0.6
 Requires:	ocaml-easy-format-devel >= 1.0.1
 
@@ -56,8 +57,8 @@ This package contains files needed to develop OCaml programs using
 this library.
 
 %description devel -l pl.UTF-8
-Pakiet ten zawiera pliki niezbędne do tworzenia programów używających
-tej biblioteki.
+Pakiet ten zawiera pliki niezbędne do tworzenia programów w OCamlu
+używających biblioteki yojson.
 
 %prep
 %setup -q -n %{module}-%{version}
